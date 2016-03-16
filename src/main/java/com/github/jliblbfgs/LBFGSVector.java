@@ -50,10 +50,6 @@ public class LBFGSVector {
         Arrays.fill(VALUES, val);
     }
 
-    public void fill(int start, int end, double val) {
-        Arrays.fill(VALUES, start, end, val);
-    }
-
     public void copyFrom(@NotNull LBFGSVector other) {
         assert VALUES.length == other.VALUES.length : "Vectors must be the same size";
         System.arraycopy(other.VALUES, 0, VALUES, 0, VALUES.length);
@@ -69,16 +65,16 @@ public class LBFGSVector {
         Arrays.parallelSetAll(VALUES, other::getNegative);
     }
 
-    public void add(@NotNull LBFGSVector other, double multiplier) {
+    public void addWithMultiplier(@NotNull LBFGSVector other, double multiplier) {
         assert VALUES.length == other.VALUES.length : "Vectors must be the same size";
         // TODO(scr): Is parallel any better than sequential?
         Arrays.parallelSetAll(VALUES, i -> VALUES[i] + multiplier * other.VALUES[i]);
     }
 
-    public void sub(@NotNull LBFGSVector a, @NotNull LBFGSVector b) {
+    public void copyDiff(@NotNull LBFGSVector a, @NotNull LBFGSVector b) {
         assert VALUES.length == a.VALUES.length && VALUES.length == b.VALUES.length : "Vectors must be the same size";
         // TODO(scr): Is parallel any better than sequential?
-        Arrays.parallelSetAll(VALUES, i -> VALUES[i] + a.VALUES[i] * b.VALUES[i]);
+        Arrays.parallelSetAll(VALUES, i -> a.VALUES[i] - b.VALUES[i]);
     }
 
     public void scale(double multiplier) {
